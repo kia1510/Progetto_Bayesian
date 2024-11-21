@@ -1,0 +1,293 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\usepackage[x11names, rgb, dvipsnames]{xcolor}
+\definecolor{SkyBlue}{HTML}{87CEEB}
+\definecolor{LightOrange}{HTML}{FFA500} 
+\definecolor{SteelBlue}{HTML}{4682B4}
+\usetikzlibrary{shapes.geometric, arrows, trees}
+
+\usepackage[backend=biber,style=authoryear]{biblatex} % Configura biblatex
+\addbibresource{bibliografia.bib} % Specifica il file .bib
+\setbeamercolor{title}{fg=SteelBlue}
+
+\begin{document}
+
+% Prima diapositiva con solo sfondo
+\begin{frame}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[opacity=0.85, at=(current page.center)] {
+            \includegraphics[width=\paperwidth,height=\paperheight]{sfondo.png}
+        };
+    \end{tikzpicture}
+
+    \begin{center}
+    \bigskip
+        {\Huge \bfseries Synthetic Data Generation with Nonparametric Bayesian Methods}\\[0.5cm]
+        {\Large \itshape Highlight privacy-preserving data analysis}\\[1cm]
+    \end{center}
+
+    % Autori
+    \begin{flushleft}
+        \textbf{Giovanni Mele, Chiara Noemi Nesti, Chiara Tomasini,\\Gianluca Villa, Andrea Violante, Stefano Zara}
+    \end{flushleft}
+
+    % Supervisore
+    \begin{flushright}
+        \textit{Supervised by:}\\
+        Prof. Mario Beraha\\
+        PhD researcher at Politecnico di Milano
+    \end{flushright}
+    
+\end{frame}
+
+############################################################
+
+\section{Why Synthetic Data?}
+
+\begin{frame}
+\frametitle{The Role of Data in Society}
+\begin{columns}[T] % [T] aligns columns at the top
+    \begin{column}{0.6\textwidth}
+        In today’s data-driven world, sensitive information, such as personal, financial, and health data, is at the core of countless applications. 
+        While these data are invaluable for gaining insights and making predictions, their direct use can lead to serious privacy risks, such as identity theft or unauthorized surveillance.
+
+        \begin{center}
+            \textbf{\textit{\\How can we harness the power of sensitive data to drive innovation and inform decisions, while ensuring privacy and ethical use?}}
+        \end{center}
+        
+    \end{column}
+    \begin{column}{0.4\textwidth}
+        \begin{figure}
+            \centering
+            \bigskip
+            \medskip
+            \includegraphics[width=\linewidth]{slide2.png}
+        \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+
+#####
+
+\begin{frame}{Differential privacy}
+\begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{DP1.png}
+    \end{figure}
+    \vspace{0.5cm} % Aggiunge spazio tra le immagini
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\linewidth]{DP2.png}   
+    \end{figure}
+    
+    \hfill\raisebox{1}{\footnotesize[1]}
+
+\end{frame}
+####
+
+\begin{frame}
+\frametitle{Goals:}
+\centering
+\begin{tikzpicture}
+
+\node[draw, fill=SkyBlue, text width=5cm, align=center, rounded corners, minimum height=2cm, drop shadow={shadow xshift=0.5ex,shadow yshift=-0.5ex}] (A) at (0,0) {\textbf{ORIGINAL DATASET} \\ \small It contains valuable information};
+
+% Secondo box (SYNTHETIC DATA)
+\node[draw, fill=LightOrange, text width=9cm, align=center, rounded corners, minimum height=2cm, drop shadow={shadow xshift=0.5ex,shadow yshift=-0.5ex}] (B) at (0,-3) {\textbf{SYNTHETIC DATASET} \\ \small It preserves the essential characteristics and patterns of the original data but removes the sensitive elements, providing a safer alternative};
+
+\draw[->, thick=4.5, color=black] (A) -- (B);
+\end{tikzpicture}
+
+\vspace{0.3cm}
+
+\begin{center}
+\textit{The fundamental goal is to simulate synthetic data while preserving real patterns while minimizing privacy risks.}
+\end{center}
+\end{frame}
+
+############################################################
+
+\section{Pólya Tree Processes}
+\begin{frame}{Pólya Tree}
+
+
+A Pólya tree defines a prior distribution on function spaces by recursively partitioning the interval $[0, 1]$ into subintervals. Probabilities are assigned to these subintervals using Beta-distributed random variables. This recursive partitioning process helps define a flexible and rich class of distributions, allowing for complex modeling of uncertainty in function spaces.
+\bigskip % Spazio verticale tra il grafico e il testo
+
+\begin{center}
+    
+\begin{tikzpicture}[every node/.style={draw, align=center, font=\footnotesize}, level distance=1cm, sibling distance=4cm]
+
+% Definizione dei nodi
+\node {\( \Omega \) = $[0,1]$}
+  child {node {\( B_0 \)}
+    child {node [xshift=0.7cm] {\( B_{00} \)}
+        child{node{...}}} 
+    child {node [xshift=-0.7cm] {\( B_{01} \)}
+        child{node{...}}}} 
+  child {node {\( B_1 \)}
+    child {node [xshift=0.7cm] {\( B_{10} \)}
+        child{node{...}}} 
+    child {node [xshift=-0.7cm] {\( B_{11} \)}
+    child{node{...}}}}; 
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+######
+\begin{frame}{Prior / Posterior}
+    ODIO LATEX: qui ci dobbiamo mettere cose??
+\end{frame}
+
+######
+
+\begin{frame}{Data Generation and Polya Tree Modeling}
+\begin{minipage}{0.5\textwidth}
+    \includegraphics[width=\textwidth]{Unif1.png}
+
+    \bigskip
+    
+    \includegraphics[width=\textwidth]{Gaus1.png}
+
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    We defined the prior as a Polya tree with depth \( m = 10 \) and parameters \( \alpha = c \cdot m^2 \), with \( c \) being a fixed constant. \\
+    
+    After calculating the posterior distribution, we sampled 30 distributions from it.
+  \end{minipage}
+\end{frame}
+
+###########################################################
+\section{Cosa succede al variare di c}
+\begin{frame}{Exploring the Sensitivity to Parameter \(c\)}
+    \centering
+    % Prima riga di immagini
+    \begin{figure}
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Unifc1.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Unifc10.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Unifc1000.png}
+        \end{minipage}
+    \end{figure}
+    \caption{\(Unif(1/4,3/4)\)}
+
+\bigskip
+    % Seconda riga di immagini
+    \begin{figure}
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Betac1.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Betac10.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Betac1000.png}
+        \end{minipage}
+    \end{figure}
+    \caption{\(Beta(2,2)\)}
+\end{frame}
+
+#####
+
+\begin{frame}{Analyzing the Optimal Choice for Parameter \(c\)}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{sorriso.jpeg}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{sorriso2.jpg}
+    \end{minipage}
+    
+    \bigskip
+    \bigskip
+    \textit{A higher \(c\) leads to greater adherence to the prior, reducing variability, while a lower \(c\) allows for more flexibility, enabling exploration of diverse distributions. Its choice affects the trade-off between prior belief and adaptability to observed data, particularly as the tree depth increases.}
+\end{frame}##########################################################
+\section{Controllo correttezza}
+\begin{frame}{Accuracy of Our Prediction}
+        \centering
+    % Prima riga di immagini
+    \begin{figure}
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Predc1.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Predc10.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Predc1000.png}
+        \end{minipage}
+    \end{figure}
+    \caption{Predictive density estimated for an \(Unif(1/4,3/4)\)}
+
+\bigskip
+    % Seconda riga di immagini
+    \begin{figure}
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{PredBetac1.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{PredBetac10.png}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.32\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{PredBetac1000.png}
+        \end{minipage}
+    \end{figure}
+    \caption{Predictive density estimated for a \(Beta(2,2)\)}
+
+\end{frame}
+
+
+############################################################
+\section{Ringraziamenti}
+\begin{frame}
+\begin{tikzpicture}[remember picture, overlay]
+        \node[opacity=0.85, at=(current page.center)] {
+            \includegraphics[width=\paperwidth,height=\paperheight]{sfondo.png}
+        };
+    \end{tikzpicture}
+
+    \centering
+    \bigskip
+    \bigskip
+    \medskip
+    
+    \Large{\textbf{Thank you for your attention\\We welcome your questions and comments}}
+
+\end{frame}
+
+\end{document}
