@@ -10,10 +10,8 @@
 \definecolor{LightOrange}{HTML}{FFA500} 
 \definecolor{SteelBlue}{HTML}{4682B4}
 \usetikzlibrary{shapes.geometric, arrows, trees}
-
-\usepackage[backend=biber,style=authoryear]{biblatex} % Configura biblatex
-\addbibresource{bibliografia.bib} % Specifica il file .bib
-\setbeamercolor{title}{fg=SteelBlue}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
 
 \begin{document}
 
@@ -53,9 +51,8 @@
 \frametitle{The Role of Data in Society}
 \begin{columns}[T] % [T] aligns columns at the top
     \begin{column}{0.6\textwidth}
-        In today’s data-driven world, sensitive information, such as personal, financial, and health data, is at the core of countless applications. 
-        While these data are invaluable for gaining insights and making predictions, their direct use can lead to serious privacy risks, such as identity theft or unauthorized surveillance.
-
+        In today's data-driven world, sensitive information plays a crucial role in generating insights and making accurate predictions. However, its use also introduces significant privacy risks, including the potential for identity theft, highlighting the need for careful handling and protection.
+        
         \begin{center}
             \textbf{\textit{\\How can we harness the power of sensitive data to drive innovation and inform decisions, while ensuring privacy and ethical use?}}
         \end{center}
@@ -80,12 +77,8 @@
         \includegraphics[width=0.8\linewidth]{DP1.png}
     \end{figure}
     \vspace{0.5cm} % Aggiunge spazio tra le immagini
-    \begin{figure}
-        \centering
-        \includegraphics[width=0.8\linewidth]{DP2.png}   
-    \end{figure}
     
-    \hfill\raisebox{1}{\footnotesize[1]}
+    Differential privacy consists in releasing statistical information about datasets while protecting the privacy. This is done by adding some noise.
 
 \end{frame}
 ####
@@ -98,7 +91,7 @@
 \node[draw, fill=SkyBlue, text width=5cm, align=center, rounded corners, minimum height=2cm, drop shadow={shadow xshift=0.5ex,shadow yshift=-0.5ex}] (A) at (0,0) {\textbf{ORIGINAL DATASET} \\ \small It contains valuable information};
 
 % Secondo box (SYNTHETIC DATA)
-\node[draw, fill=LightOrange, text width=9cm, align=center, rounded corners, minimum height=2cm, drop shadow={shadow xshift=0.5ex,shadow yshift=-0.5ex}] (B) at (0,-3) {\textbf{SYNTHETIC DATASET} \\ \small It preserves the essential characteristics and patterns of the original data but removes the sensitive elements, providing a safer alternative};
+\node[draw, fill=LightOrange, text width=9cm, align=center, rounded corners, minimum height=2cm, drop shadow={shadow xshift=0.5ex,shadow yshift=-0.5ex}] (B) at (0,-3) {\textbf{SYNTHETIC DATASET} \\ \small It preserves the essential characteristics and patterns of the original data but modifies the sensitive elements, providing a safer alternative};
 
 \draw[->, thick=4.5, color=black] (A) -- (B);
 \end{tikzpicture}
@@ -120,35 +113,33 @@ A Pólya tree defines a prior distribution on function spaces by recursively par
 \bigskip % Spazio verticale tra il grafico e il testo
 
 \begin{center}
+    \includegraphics[width=\textwidth]{albero.jpg}
     
-\begin{tikzpicture}[every node/.style={draw, align=center, font=\footnotesize}, level distance=1cm, sibling distance=4cm]
-
-% Definizione dei nodi
-\node {\( \Omega \) = $[0,1]$}
-  child {node {\( B_0 \)}
-    child {node [xshift=0.7cm] {\( B_{00} \)}
-        child{node{...}}} 
-    child {node [xshift=-0.7cm] {\( B_{01} \)}
-        child{node{...}}}} 
-  child {node {\( B_1 \)}
-    child {node [xshift=0.7cm] {\( B_{10} \)}
-        child{node{...}}} 
-    child {node [xshift=-0.7cm] {\( B_{11} \)}
-    child{node{...}}}}; 
-
-\end{tikzpicture}
 \end{center}
 
 \end{frame}
 
 ######
-\begin{frame}{Prior / Posterior}
-    ODIO LATEX: qui ci dobbiamo mettere cose??
+\begin{frame}{Pólya Tree Framework: Definitions and Parameterization}
+
+    A Pólya tree is denoted by \textbf{\(G \sim \mathcal{PT}(\Pi, \mathcal{A})\)}\\
+    \bigskip
+    Lavine (1992) proposed the following choice
+    to center the \(\mathcal{PT}\) around a given centering probability measure \(G_0\). \\ 
+    In short, fix \(\Pi\) as
+     the dyadic quantiles of \(G_0\) and use \(\alpha_{\epsilon_0}=\alpha_{\epsilon_1}\) for every level.\\
+     \bigskip
+     Lavine (1992) proposes \(\alpha_{\epsilon_0 ... \epsilon_m} = m^2\) as a canonical choice. Walker and Mallick (1997) and Paddock (1999) updated the model by defining  \(\alpha_{\epsilon_0 ... \epsilon_m} = c \cdot m^2\), with \(c > 0\). \\
+     \bigskip
+     The posterior distribution of a Pólya Tree remains a Pólya Tree. \\
+    This is due to the conjugacy property of the model in fact the structure is preserved after updating with observed data.
+
+     
 \end{frame}
 
 ######
 
-\begin{frame}{Data Generation and Polya Tree Modeling}
+\begin{frame}{Data Generation and Pólya Tree Modeling}
 \begin{minipage}{0.5\textwidth}
     \includegraphics[width=\textwidth]{Unif1.png}
 
@@ -159,11 +150,26 @@ A Pólya tree defines a prior distribution on function spaces by recursively par
   \end{minipage}
   \hfill
   \begin{minipage}{0.45\textwidth}
-    We defined the prior as a Polya tree with depth \( m = 10 \) and parameters \( \alpha = c \cdot m^2 \), with \( c \) being a fixed constant. \\
+    We defined the prior as a Pólya tree with depth \( M = 10 \) and parameters \( \alpha = c \cdot m^2 \), with \( c \) being a fixed constant. \\
     
     After calculating the posterior distribution, we sampled 30 distributions from it.
   \end{minipage}
 \end{frame}
+#####
+
+\begin{frame}{Initial Predictive Analysis}
+\centering
+    \begin{minipage}{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{albero.jpg}
+        \smallskip % Spazio tra le due immagini
+    \end{minipage}
+
+    \begin{minipage}{0.65\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gaus1.png}
+    \end{minipage}
+\end{frame}#####
 
 ###########################################################
 \section{Cosa succede al variare di c}
@@ -209,7 +215,6 @@ A Pólya tree defines a prior distribution on function spaces by recursively par
     \caption{\(Beta(2,2)\)}
 \end{frame}
 
-#####
 
 \begin{frame}{Analyzing the Optimal Choice for Parameter \(c\)}
     \centering
@@ -225,8 +230,12 @@ A Pólya tree defines a prior distribution on function spaces by recursively par
     
     \bigskip
     \bigskip
-    \textit{A higher \(c\) leads to greater adherence to the prior, reducing variability, while a lower \(c\) allows for more flexibility, enabling exploration of diverse distributions. Its choice affects the trade-off between prior belief and adaptability to observed data, particularly as the tree depth increases.}
-\end{frame}##########################################################
+    A higher \(c\) leads to greater adherence to the prior, reducing variability, while a lower \(c\) allows for more flexibility, enabling exploration of diverse distributions. Its choice affects the trade-off between prior belief and adaptability to observed data, particularly as the tree depth increases.
+    
+\end{frame}
+
+##########################################################
+
 \section{Controllo correttezza}
 \begin{frame}{Accuracy of Our Prediction}
         \centering
@@ -268,25 +277,6 @@ A Pólya tree defines a prior distribution on function spaces by recursively par
         \end{minipage}
     \end{figure}
     \caption{Predictive density estimated for a \(Beta(2,2)\)}
-
-\end{frame}
-
-
-############################################################
-\section{Ringraziamenti}
-\begin{frame}
-\begin{tikzpicture}[remember picture, overlay]
-        \node[opacity=0.85, at=(current page.center)] {
-            \includegraphics[width=\paperwidth,height=\paperheight]{sfondo.png}
-        };
-    \end{tikzpicture}
-
-    \centering
-    \bigskip
-    \bigskip
-    \medskip
-    
-    \Large{\textbf{Thank you for your attention\\We welcome your questions and comments}}
 
 \end{frame}
 
